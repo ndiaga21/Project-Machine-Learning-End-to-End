@@ -1,6 +1,6 @@
-# Detection_Fraud_Mobile_Money
+# Projet Machine learning end-to-end
 
-## Detection de fraudes sur les transactions Mobile Money
+
 
 
 ### Software and Tools Requirements
