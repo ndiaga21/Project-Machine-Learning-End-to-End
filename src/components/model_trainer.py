@@ -16,14 +16,22 @@ from sklearn.metrics import r2_score
 
 from catboost import CatBoostRegressor
 from xgboost import XGBRegressor
+import yaml
 
 @dataclass
 class ModelTrainerConfig:
     trained_model_file_path=os.path.join("artifacts","model.pkl")
 
 class ModelTrainer:
-     def __init__(self) :
+     def __init__(self, config_file_path="artifacts\params_config.yaml") :
         self.model_trainer_config = ModelTrainerConfig()
+        self.params_config = self.load_config(config_file_path)
+
+     def load_config(self, config_file_path):
+        with open(config_file_path, "r") as file:
+            config_data = yaml.safe_load(file)
+
+        return config_data["models"]
         
      def initiate_model_trainer(self,train_array,test_array):
          try:
@@ -44,8 +52,10 @@ class ModelTrainer:
                     "AdaBoost Regressor": AdaBoostRegressor(),
                     "Gradient Boosting": GradientBoostingRegressor()
                  }
+            
+
              model_report:dict= evaluate_models(X_train=X_train,y_train=y_train,X_test=X_test,y_test=y_test,
-                                               models=models)
+                                               models=models,param=self.params_config)
              
              ### To get best model score from dict
              best_model_score = max(sorted(model_report.values()))
